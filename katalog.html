@@ -6,6 +6,8 @@
 <title>PakaiLagiAja - Katalog</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </head>
 <body>
 
@@ -33,12 +35,12 @@
 <div class="catalog-layout">
   <aside class="sidebar">
     <div class="sidebar-title">Kategori</div>
-    <button class="cat-btn active" onclick="filterCat(this, 'semua')"><span>🏠</span> Semua <span class="cat-count">12</span></button>
-    <button class="cat-btn" onclick="filterCat(this, 'elektronik')"><span>⚡</span> Elektronik <span class="cat-count">4</span></button>
-    <button class="cat-btn" onclick="filterCat(this, 'buku')"><span>📚</span> Buku <span class="cat-count">2</span></button>
-    <button class="cat-btn" onclick="filterCat(this, 'dapur')"><span>🍳</span> Dapur <span class="cat-count">2</span></button>
-    <button class="cat-btn" onclick="filterCat(this, 'pakaian')"><span>👕</span> Pakaian <span class="cat-count">2</span></button>
-    <button class="cat-btn" onclick="filterCat(this, 'perabot')"><span>🪑</span> Perabot <span class="cat-count">2</span></button>
+    <button class="cat-btn active" onclick="filterCat(this, 'semua')"><span>🏠</span> Semua <span class="cat-count" id="count-semua">-</span></button>
+    <button class="cat-btn" onclick="filterCat(this, 'elektronik')"><span>⚡</span> Elektronik <span class="cat-count" id="count-elektronik">-</span></button>
+    <button class="cat-btn" onclick="filterCat(this, 'buku')"><span>📚</span> Buku <span class="cat-count" id="count-buku">-</span></button>
+    <button class="cat-btn" onclick="filterCat(this, 'dapur')"><span>🍳</span> Dapur <span class="cat-count" id="count-dapur">-</span></button>
+    <button class="cat-btn" onclick="filterCat(this, 'pakaian')"><span>👕</span> Pakaian <span class="cat-count" id="count-pakaian">-</span></button>
+    <button class="cat-btn" onclick="filterCat(this, 'perabot')"><span>🪑</span> Perabot <span class="cat-count" id="count-perabot">-</span></button>
 
     <div class="sidebar-title">Status</div>
     <div class="filter-group">
@@ -54,9 +56,6 @@
     <div class="sidebar-title">Jenis</div>
     <div class="filter-group">
         <label class="filter-label"><input type="checkbox" class="filter-type" value="Pinjam" checked> Pinjam</label>
-    </div>
-    <div class="filter-group">
-        <label class="filter-label"><input type="checkbox" class="filter-type" value="Tukar" checked> Tukar</label>
     </div>
     <div class="filter-group">
         <label class="filter-label"><input type="checkbox" class="filter-type" value="Gratis" checked> Gratis</label>
@@ -162,15 +161,24 @@
 
     <div class="form-group">
         <label class="form-label">Foto Barang</label>
-  
-        <input type="file" id="add-item-file-input" accept="image/*" style="display: none;">
-  
+        <input type="file" id="add-item-file-input" accept="image/*" style="display:none;">
         <div id="add-item-upload-area">
-            <div id="add-item-placeholder">
-                📷 Klik untuk upload foto
-            </div>
-            <img id="add-item-preview" src="" alt="Preview Foto">
+            <div id="add-item-placeholder">📷 Klik untuk upload foto</div>
+            <img id="add-item-preview" src="" alt="Preview Foto" style="display:none;">
         </div>
+    </div>
+
+    <!-- Modal Crop -->
+    <div class="modal-overlay" id="crop-modal">
+      <div class="modal" style="max-width:500px;">
+        <button class="modal-close" onclick="closeCropModal()">✕</button>
+        <div class="modal-title">Crop Foto</div>
+        <div class="modal-sub">Sesuaikan area foto yang ingin ditampilkan</div>
+        <div style="max-height:400px;overflow:hidden;margin-bottom:1rem;">
+          <img id="crop-image" style="max-width:100%;">
+        </div>
+        <button class="btn btn-primary" style="width:100%;" onclick="applyCrop()">Gunakan Foto Ini</button>
+      </div>
     </div>
 
     <button class="btn btn-primary" style="width:100%;" onclick="handleTambahBarang()">Tambah ke Katalog</button>
@@ -190,41 +198,15 @@
       </div>
       <p style="font-size:14px;color:var(--text-muted);margin-bottom:1rem;" id="detail-desc">Kondisi baik, fungsi normal, bersih. Sudah dipakai 1 tahun. Cocok untuk kamar kos ukuran kecil-sedang.</p>
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:1rem;">
-        <div style="width:28px;height:28px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:13px;">AN</div>
-        <span style="font-size:13px;color:var(--text-muted);">Pemilik: <strong style="color:var(--text);">Andi Nugraha</strong> &bull; Rating: ⭐ 4.8</span>
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:13px;" id="detail-owner-avatar">?</div>
+        <span style="font-size:13px;color:var(--text-muted);">Pemilik: <strong style="color:var(--text);" id="detail-owner">-</strong> &bull; Rating: ⭐ <span id="detail-rating">-</span></span>
       </div>
       <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="handleAjukanPinjam()">Ajukan Peminjaman</button>
 
       <div class="lifecycle-timeline">
         <div class="timeline-title">Riwayat Lifecycle</div>
-        <div class="timeline-item">
-          <div class="timeline-dot-wrap">
-            <div class="timeline-dot"></div>
-            <div class="timeline-line"></div>
-          </div>
-          <div class="timeline-content">
-            <strong>Ditambahkan</strong> oleh Andi — kondisi: Sangat Baik
-            <div class="timeline-time">10 Feb 2025</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot-wrap">
-            <div class="timeline-dot" style="background:var(--amber)"></div>
-            <div class="timeline-line"></div>
-          </div>
-          <div class="timeline-content">
-            <strong>Dipinjam</strong> oleh Raka S. — dikembalikan dengan kondisi: Baik
-            <div class="timeline-time">20 Feb – 5 Mar 2025</div>
-          </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot-wrap">
-            <div class="timeline-dot" style="background:var(--blue)"></div>
-          </div>
-          <div class="timeline-content">
-            <strong>Tersedia kembali</strong> — kondisi diperbarui: Baik
-            <div class="timeline-time">5 Mar 2025</div>
-          </div>
+        <div id="lifecycle-content">
+          <!-- akan diisi dynamic -->
         </div>
       </div>
     </div>
@@ -232,5 +214,23 @@
 </div>
 
 <script src="script.js"></script>
+
+<div class="modal-overlay" id="rating-modal">
+  <div class="modal" style="max-width:400px;text-align:center;">
+    <button class="modal-close" onclick="closeModal('rating-modal')">✕</button>
+    <div class="modal-title">Beri Rating</div>
+    <div class="modal-sub">Bagaimana pengalaman meminjam barang ini?</div>
+    <div style="display:flex;justify-content:center;gap:12px;margin:1.5rem 0;font-size:2rem;">
+      <span class="star" onclick="selectRating(1)">⭐</span>
+      <span class="star" onclick="selectRating(2)">⭐</span>
+      <span class="star" onclick="selectRating(3)">⭐</span>
+      <span class="star" onclick="selectRating(4)">⭐</span>
+      <span class="star" onclick="selectRating(5)">⭐</span>
+    </div>
+    <div id="rating-selected" style="font-size:14px;color:var(--text-muted);margin-bottom:1rem;">Belum dipilih</div>
+    <button class="btn btn-primary" style="width:100%;" onclick="submitRating()">Kembalikan & Submit Rating</button>
+  </div>
+</div>
+
 </body>
 </html>

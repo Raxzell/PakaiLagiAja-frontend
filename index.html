@@ -37,22 +37,19 @@
 
     <div class="hero-actions">
       <button class="btn btn-primary" onclick="window.location.href='katalog.html'">Jelajahi Barang →</button>
-      <button class="btn btn-outline" onclick="openModal('register-modal')">Mulai Donasi</button>
     </div>
+    
     <div class="hero-stats">
       <div>
-        <div class="hero-stat-num">1.2k+</div>
+        <div class="hero-stat-num" id="home-barang-aktif">-</div>
         <div class="hero-stat-label">Barang aktif</div>
       </div>
       <div>
-        <div class="hero-stat-num">340kg</div>
-        <div class="hero-stat-label">Limbah dicegah</div>
-      </div>
-      <div>
-        <div class="hero-stat-num">800+</div>
+        <div class="hero-stat-num" id="home-total-pengguna">-</div>
         <div class="hero-stat-label">Pengguna</div>
       </div>
     </div>
+
   </div>
   <div class="hero-visual">
     <div class="hero-card-stack">
@@ -89,28 +86,20 @@
     <div class="section-label">Fitur Unggulan</div>
     <div class="section-title">Semua yang kamu butuhkan,<br>dalam satu platform</div>
     <p class="section-sub">Dari peminjaman terorganisir hingga pelacakan dampak lingkungan — dirancang untuk mahasiswa dan komunitas kampus.</p>
+    
     <div class="features-grid">
-      <div class="feature-card fade-in stagger-1">
-        <div class="feature-icon feature-icon-green">🔄</div>
-        <div class="feature-title">Sistem Peminjaman & Penukaran</div>
-        <p class="feature-desc">Ajukan pinjam, terima konfirmasi, dan kembalikan barang dengan alur yang jelas dan tercatat.</p>
+      <div class="feature-card">
+        <div class="feature-icon">♻️</div>
+        <h3>Sistem Penukaran &amp; Pinjam</h3>
+        <p>Ajukan peminjaman atau penukaran barang bekas layak pakai langsung ke pemiliknya. Kendalikan penuh status persetujuan barang lewat Dashboard interaktifmu.</p>
       </div>
-      <div class="feature-card fade-in stagger-2">
-        <div class="feature-icon feature-icon-amber">📋</div>
-        <div class="feature-title">Lifecycle Barang Transparan</div>
-        <p class="feature-desc">Setiap perpindahan dan kondisi barang tercatat otomatis — riwayat lengkap bisa dilihat kapan saja.</p>
-      </div>
-      <div class="feature-card fade-in stagger-3">
-        <div class="feature-icon feature-icon-blue">📊</div>
-        <div class="feature-title">Dashboard Dampak SDG</div>
-        <p class="feature-desc">Pantau kontribusi nyata kamu terhadap lingkungan — jumlah limbah yang dicegah dan barang yang beredar.</p>
-      </div>
-      <div class="feature-card fade-in stagger-4">
-        <div class="feature-icon feature-icon-coral">🔔</div>
-        <div class="feature-title">Notifikasi & Moderasi</div>
-        <p class="feature-desc">Pengingat deadline pengembalian otomatis dan ekosistem terjaga oleh moderasi admin.</p>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Dashboard Aktivitas Real-time</h3>
+        <p>Pantau seluruh riwayat barang yang kamu miliki, notifikasi pengajuan masuk dari pengguna lain, hingga status barang yang sedang dipinjam secara langsung tanpa delay.</p>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -133,12 +122,13 @@
       <div style="font-weight:500;margin-bottom:6px;">Ajukan Pinjaman</div>
       <p style="font-size:13px;color:var(--text-muted);">Klik tombol pinjam, tunggu konfirmasi dari pemilik barang.</p>
     </div>
+    
     <div style="text-align:center; padding: 1.5rem;">
       <div style="width:52px;height:52px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:22px;">4</div>
-      <div style="font-weight:500;margin-bottom:6px;">Kembalikan & Catat</div>
-      <p style="font-size:13px;color:var(--text-muted);">Kembalikan tepat waktu, update kondisi, dan siklus berlanjut.</p>
+      <div style="font-weight:500;margin-bottom:6px;">Siklus Berlanjut</div>
+      <p style="font-size:13px;color:var(--text-muted);">Kembalikan, kasih rating, dan siklus berlanjut.</p>
     </div>
-  </div>
+    </div>
 </section>
 
 <footer>
@@ -169,13 +159,6 @@
     <button class="modal-close" onclick="closeModal('register-modal')">✕</button>
     <div class="modal-title">Buat akun baru</div>
     <div class="modal-sub">Bergabung dengan komunitas PakaiLagiAja</div>
-    <div style="margin-bottom:14px;">
-      <div class="form-label" style="margin-bottom:8px;">Bergabung sebagai</div>
-      <div class="role-toggle">
-        <button class="role-btn selected" onclick="selectRole(this)">🎁 Donatur</button>
-        <button class="role-btn" onclick="selectRole(this)">🤲 Penerima</button>
-      </div>
-    </div>
     <div class="form-group">
       <label class="form-label">Nama Lengkap</label>
       <input class="form-input" type="text" placeholder="Nama kamu">
