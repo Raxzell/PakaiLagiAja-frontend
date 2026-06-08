@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PakaiLagiAja - Beranda</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="window.location.href='index.html'">
+    <div class="leaf">♻</div>
+    PakaiLagiAja
+  </div>
+  <ul class="nav-links">
+    <li><button onclick="window.location.href='index.html'" class="active">Beranda</button></li>
+    <li><button onclick="window.location.href='katalog.html'">Katalog</button></li>
+    <li><button onclick="window.location.href='dashboard.html'">Dashboard</button></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn btn-outline btn-sm" onclick="openModal('login-modal')">Masuk</button>
+    <button class="btn btn-primary btn-sm" onclick="openModal('register-modal')">Daftar</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content fade-in">
+    <div class="hero-badge">🌿 SDG 12 — Konsumsi Bertanggung Jawab</div>
+    
+    <h1>Pakai Lagi Aja.</h1>
+    <p>
+      <strong style="color: var(--green-dark); font-size: 1.15rem; display: block; margin-bottom: 8px;">Reuse Today, Save Tomorrow.</strong>
+      Platform peminjaman, penukaran, dan distribusi barang layak pakai. Bantu sesama, kurangi limbah, perpanjang siklus hidup barang.
+    </p>
+
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="window.location.href='katalog.html'">Jelajahi Barang →</button>
+      <button class="btn btn-outline" onclick="openModal('register-modal')">Mulai Donasi</button>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">1.2k+</div>
+        <div class="hero-stat-label">Barang aktif</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">340kg</div>
+        <div class="hero-stat-label">Limbah dicegah</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">800+</div>
+        <div class="hero-stat-label">Pengguna</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-card-stack">
+      <div class="item-card card-float-1">
+        <div class="item-thumb thumb-blue">📚</div>
+        <div class="item-name">Buku Kalkulus Edisi 9</div>
+        <div class="item-meta">
+          <span class="tag tag-blue">Buku</span>
+          <span class="item-status">Tersedia</span>
+        </div>
+      </div>
+      <div class="item-card card-float-2">
+        <div class="item-thumb thumb-green">🌀</div>
+        <div class="item-name">Kipas Angin COSMOS</div>
+        <div class="item-meta">
+          <span class="tag tag-green">Elektronik</span>
+          <span class="item-status">Tersedia</span>
+        </div>
+      </div>
+      <div class="item-card card-float-3">
+        <div class="item-thumb thumb-amber">🍳</div>
+        <div class="item-name">Rice Cooker 1L</div>
+        <div class="item-meta">
+          <span class="tag tag-amber">Dapur</span>
+          <span class="item-status">Dipinjam</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background: var(--white); max-width: 100%; padding: 4rem 2rem;">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="section-label">Fitur Unggulan</div>
+    <div class="section-title">Semua yang kamu butuhkan,<br>dalam satu platform</div>
+    <p class="section-sub">Dari peminjaman terorganisir hingga pelacakan dampak lingkungan — dirancang untuk mahasiswa dan komunitas kampus.</p>
+    <div class="features-grid">
+      <div class="feature-card fade-in stagger-1">
+        <div class="feature-icon feature-icon-green">🔄</div>
+        <div class="feature-title">Sistem Peminjaman & Penukaran</div>
+        <p class="feature-desc">Ajukan pinjam, terima konfirmasi, dan kembalikan barang dengan alur yang jelas dan tercatat.</p>
+      </div>
+      <div class="feature-card fade-in stagger-2">
+        <div class="feature-icon feature-icon-amber">📋</div>
+        <div class="feature-title">Lifecycle Barang Transparan</div>
+        <p class="feature-desc">Setiap perpindahan dan kondisi barang tercatat otomatis — riwayat lengkap bisa dilihat kapan saja.</p>
+      </div>
+      <div class="feature-card fade-in stagger-3">
+        <div class="feature-icon feature-icon-blue">📊</div>
+        <div class="feature-title">Dashboard Dampak SDG</div>
+        <p class="feature-desc">Pantau kontribusi nyata kamu terhadap lingkungan — jumlah limbah yang dicegah dan barang yang beredar.</p>
+      </div>
+      <div class="feature-card fade-in stagger-4">
+        <div class="feature-icon feature-icon-coral">🔔</div>
+        <div class="feature-title">Notifikasi & Moderasi</div>
+        <p class="feature-desc">Pengingat deadline pengembalian otomatis dan ekosistem terjaga oleh moderasi admin.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-label">Cara Kerja</div>
+  <div class="section-title">Mudah dari awal</div>
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 0; margin-top: 2rem;">
+    <div style="text-align:center; padding: 1.5rem; position: relative;">
+      <div style="width:52px;height:52px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:22px;">1</div>
+      <div style="font-weight:500;margin-bottom:6px;">Buat Akun</div>
+      <p style="font-size:13px;color:var(--text-muted);">Registrasi sebagai Donatur atau Penerima dalam hitungan menit.</p>
+    </div>
+    <div style="text-align:center; padding: 1.5rem;">
+      <div style="width:52px;height:52px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:22px;">2</div>
+      <div style="font-weight:500;margin-bottom:6px;">Jelajahi Katalog</div>
+      <p style="font-size:13px;color:var(--text-muted);">Temukan barang yang kamu butuhkan atau tambahkan barang untuk dibagikan.</p>
+    </div>
+    <div style="text-align:center; padding: 1.5rem;">
+      <div style="width:52px;height:52px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:22px;">3</div>
+      <div style="font-weight:500;margin-bottom:6px;">Ajukan Pinjaman</div>
+      <p style="font-size:13px;color:var(--text-muted);">Klik tombol pinjam, tunggu konfirmasi dari pemilik barang.</p>
+    </div>
+    <div style="text-align:center; padding: 1.5rem;">
+      <div style="width:52px;height:52px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:22px;">4</div>
+      <div style="font-weight:500;margin-bottom:6px;">Kembalikan & Catat</div>
+      <p style="font-size:13px;color:var(--text-muted);">Kembalikan tepat waktu, update kondisi, dan siklus berlanjut.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>PakaiLagiAja &mdash; Mendukung SDG 12: Konsumsi dan Produksi Bertanggung Jawab &bull; <a href="#">Tentang</a> &bull; <a href="#">Kontak</a></p>
+</footer>
+
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('login-modal')">✕</button>
+    <div class="modal-title">Selamat datang kembali</div>
+    <div class="modal-sub">Masuk ke akun PakaiLagiAja kamu</div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" placeholder="nama@email.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" placeholder="••••••••">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="handleLogin()">Masuk</button>
+    <div class="divider">atau</div>
+    <p style="text-align:center;font-size:13px;color:var(--text-muted);">Belum punya akun? <a href="#" style="color:var(--green);" onclick="closeModal('login-modal');openModal('register-modal');return false;">Daftar sekarang</a></p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="register-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('register-modal')">✕</button>
+    <div class="modal-title">Buat akun baru</div>
+    <div class="modal-sub">Bergabung dengan komunitas PakaiLagiAja</div>
+    <div style="margin-bottom:14px;">
+      <div class="form-label" style="margin-bottom:8px;">Bergabung sebagai</div>
+      <div class="role-toggle">
+        <button class="role-btn selected" onclick="selectRole(this)">🎁 Donatur</button>
+        <button class="role-btn" onclick="selectRole(this)">🤲 Penerima</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nama Lengkap</label>
+      <input class="form-input" type="text" placeholder="Nama kamu">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" placeholder="nama@email.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" placeholder="Min. 8 karakter">
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="handleRegister()">Daftar</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

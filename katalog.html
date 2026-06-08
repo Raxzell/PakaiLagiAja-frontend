@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PakaiLagiAja - Katalog</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="window.location.href='index.html'">
+    <div class="leaf">♻</div>
+    PakaiLagiAja
+  </div>
+  <ul class="nav-links">
+    <li><button onclick="window.location.href='index.html'">Beranda</button></li>
+    <li><button onclick="window.location.href='katalog.html'" class="active">Katalog</button></li>
+    <li><button onclick="window.location.href='dashboard.html'">Dashboard</button></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn btn-outline btn-sm" onclick="openModal('login-modal')">Masuk</button>
+    <button class="btn btn-primary btn-sm" onclick="openModal('register-modal')">Daftar</button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Katalog Barang</h1>
+  <p>1.243 barang tersedia dari komunitas</p>
+</div>
+
+<div class="catalog-layout">
+  <aside class="sidebar">
+    <div class="sidebar-title">Kategori</div>
+    <button class="cat-btn active" onclick="filterCat(this, 'semua')"><span>🏠</span> Semua <span class="cat-count">12</span></button>
+    <button class="cat-btn" onclick="filterCat(this, 'elektronik')"><span>⚡</span> Elektronik <span class="cat-count">4</span></button>
+    <button class="cat-btn" onclick="filterCat(this, 'buku')"><span>📚</span> Buku <span class="cat-count">2</span></button>
+    <button class="cat-btn" onclick="filterCat(this, 'dapur')"><span>🍳</span> Dapur <span class="cat-count">2</span></button>
+    <button class="cat-btn" onclick="filterCat(this, 'pakaian')"><span>👕</span> Pakaian <span class="cat-count">2</span></button>
+    <button class="cat-btn" onclick="filterCat(this, 'perabot')"><span>🪑</span> Perabot <span class="cat-count">2</span></button>
+
+    <div class="sidebar-title">Status</div>
+    <div class="filter-group">
+        <label class="filter-label"><input type="checkbox" class="filter-status" value="Tersedia" checked> Tersedia</label>
+    </div>
+    <div class="filter-group">
+        <label class="filter-label"><input type="checkbox" class="filter-status" value="Dipinjam" checked> Dipinjam</label>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label"><input type="checkbox" class="filter-status" value="Menunggu" checked> Menunggu</label>
+    </div>
+
+    <div class="sidebar-title">Jenis</div>
+    <div class="filter-group">
+        <label class="filter-label"><input type="checkbox" class="filter-type" value="Pinjam" checked> Pinjam</label>
+    </div>
+    <div class="filter-group">
+        <label class="filter-label"><input type="checkbox" class="filter-type" value="Tukar" checked> Tukar</label>
+    </div>
+    <div class="filter-group">
+        <label class="filter-label"><input type="checkbox" class="filter-type" value="Gratis" checked> Gratis</label>
+    </div>
+
+    <div style="margin-top: 1.25rem;">
+        <button class="btn btn-primary" style="width:100%;" onclick="cekLoginLaluTambah()">+ Tambah Barang</button>
+    </div>
+    </aside>
+
+    <div class="catalog-main">
+    <div class="catalog-header">
+        <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Cari nama barang...">
+        </div>
+        <select class="sort-select" id="sort-select">
+        <option value="terbaru">Terbaru</option>
+        <option value="az">A–Z</option>
+        <option value="za">Z–A</option>
+        </select>
+    </div>
+
+    <div class="catalog-grid" id="catalog-grid">
+        </div>
+    </div>
+</div>
+
+<footer>
+  <p>PakaiLagiAja &mdash; Mendukung SDG 12: Konsumsi dan Produksi Bertanggung Jawab &bull; <a href="#">Tentang</a> &bull; <a href="#">Kontak</a></p>
+</footer>
+
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('login-modal')">✕</button>
+    <div class="modal-title">Selamat datang kembali</div>
+    <div class="modal-sub">Masuk ke akun PakaiLagiAja kamu</div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="nama@email.com"></div>
+    <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="••••••••"></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="handleLogin()">Masuk</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="register-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('register-modal')">✕</button>
+    <div class="modal-title">Buat akun baru</div>
+    <div class="modal-sub">Bergabung dengan komunitas PakaiLagiAja</div>
+    <div class="form-group"><label class="form-label">Nama Lengkap</label><input class="form-input" type="text" placeholder="Nama kamu"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="nama@email.com"></div>
+    <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="Min. 8 karakter"></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="handleRegister()">Daftar</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="add-item-modal">
+  <div class="modal" style="max-width:500px;">
+    <button class="modal-close" onclick="closeModal('add-item-modal')">✕</button>
+    <div class="modal-title">Tambah Barang</div>
+    <div class="modal-sub">Bagikan barang yang sudah tidak terpakai</div>
+    
+    <div class="form-group">
+      <label class="form-label">Nama Barang</label>
+      <input class="form-input" type="text" placeholder="Contoh: Kipas Angin Miyako 12 inch">
+    </div>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label class="form-label">Kategori</label>
+        <select class="form-input" style="cursor:pointer;">
+          <option>Elektronik</option>
+          <option>Buku</option>
+          <option>Dapur</option>
+          <option>Pakaian</option>
+          <option>Perabot</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Jenis</label>
+        <select class="form-input" style="cursor:pointer;">
+          <option>Pinjam</option>
+          <option>Tukar</option>
+          <option>Gratis</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Kondisi</label>
+      <select class="form-input" style="cursor:pointer;">
+        <option>Sangat Baik</option>
+        <option>Baik</option>
+        <option>Cukup Baik</option>
+        <option>Perlu Perbaikan</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Deskripsi</label>
+      <textarea class="form-input" rows="3" placeholder="Ceritakan kondisi barang lebih detail..." style="resize:vertical;"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Foto Barang</label>
+  
+        <input type="file" id="add-item-file-input" accept="image/*" style="display: none;">
+  
+        <div id="add-item-upload-area">
+            <div id="add-item-placeholder">
+                📷 Klik untuk upload foto
+            </div>
+            <img id="add-item-preview" src="" alt="Preview Foto">
+        </div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;" onclick="handleTambahBarang()">Tambah ke Katalog</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="item-detail-modal">
+  <div class="item-detail-modal">
+    <button class="modal-close" onclick="closeModal('item-detail-modal')" style="z-index:2;top:0.75rem;right:0.75rem;">✕</button>
+    <div class="item-detail-img" id="detail-img" style="background:var(--green-light);"></div>
+    <div class="item-detail-body">
+      <div class="item-detail-title" id="detail-name">Kipas Angin COSMOS</div>
+      <div class="item-detail-meta">
+        <span class="tag tag-green" id="detail-cat">Elektronik</span>
+        <span class="tag tag-green">Tersedia</span>
+        <span class="tag tag-gray">Pinjam</span>
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:1rem;" id="detail-desc">Kondisi baik, fungsi normal, bersih. Sudah dipakai 1 tahun. Cocok untuk kamar kos ukuran kecil-sedang.</p>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:1rem;">
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:13px;">AN</div>
+        <span style="font-size:13px;color:var(--text-muted);">Pemilik: <strong style="color:var(--text);">Andi Nugraha</strong> &bull; Rating: ⭐ 4.8</span>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="handleAjukanPinjam()">Ajukan Peminjaman</button>
+
+      <div class="lifecycle-timeline">
+        <div class="timeline-title">Riwayat Lifecycle</div>
+        <div class="timeline-item">
+          <div class="timeline-dot-wrap">
+            <div class="timeline-dot"></div>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-content">
+            <strong>Ditambahkan</strong> oleh Andi — kondisi: Sangat Baik
+            <div class="timeline-time">10 Feb 2025</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot-wrap">
+            <div class="timeline-dot" style="background:var(--amber)"></div>
+            <div class="timeline-line"></div>
+          </div>
+          <div class="timeline-content">
+            <strong>Dipinjam</strong> oleh Raka S. — dikembalikan dengan kondisi: Baik
+            <div class="timeline-time">20 Feb – 5 Mar 2025</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot-wrap">
+            <div class="timeline-dot" style="background:var(--blue)"></div>
+          </div>
+          <div class="timeline-content">
+            <strong>Tersedia kembali</strong> — kondisi diperbarui: Baik
+            <div class="timeline-time">5 Mar 2025</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

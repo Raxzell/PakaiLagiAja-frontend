@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PakaiLagiAja - Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="window.location.href='index.html'">
+    <div class="leaf">♻</div>
+    PakaiLagiAja
+  </div>
+  <ul class="nav-links">
+    <li><button onclick="window.location.href='index.html'">Beranda</button></li>
+    <li><button onclick="window.location.href='katalog.html'">Katalog</button></li>
+    <li><button onclick="window.location.href='dashboard.html'" class="active">Dashboard</button></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn btn-outline btn-sm" onclick="openModal('login-modal')">Masuk</button>
+    <button class="btn btn-primary btn-sm" onclick="openModal('register-modal')">Daftar</button>
+  </div>
+</nav>
+
+<div class="dashboard-layout">
+  <div class="dash-header">
+    <div>
+      <div class="dash-greeting" id="dash-greeting">Selamat datang 👋</div>
+      <div class="dash-sub"> Mari lanjutkan langkah kecilmu untuk menjaga bumi</div>
+    </div>
+    <button class="btn btn-primary" onclick="cekLoginLaluTambah()">+ Tambah Barang</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card green fade-in stagger-1">
+      <div class="stat-label">Barang Aktif</div>
+      <div class="stat-num" style="color:var(--green-dark)">8</div>
+      <div class="stat-change">↑ 2 minggu ini</div>
+    </div>
+    <div class="stat-card amber fade-in stagger-2">
+      <div class="stat-label">Sedang Dipinjam</div>
+      <div class="stat-num" style="color:#854F0B">3</div>
+      <div class="stat-change" style="color:var(--amber)">Batas: 2 hari lagi</div>
+    </div>
+    <div class="stat-card blue fade-in stagger-3">
+      <div class="stat-label">Total Transaksi</div>
+      <div class="stat-num" style="color:var(--blue)">27</div>
+      <div class="stat-change" style="color:var(--blue)">↑ 5 bulan ini</div>
+    </div>
+    <div class="stat-card coral fade-in stagger-4">
+      <div class="stat-label">Limbah Dicegah</div>
+      <div class="stat-num" style="color:var(--coral)">12kg</div>
+      <div class="stat-change" style="color:var(--coral)">Estimasi CO₂ terselamatkan</div>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <div>
+      <div class="dash-panel">
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab(this,'activity')">Aktivitas Terkini</button>
+          <button class="tab" onclick="switchTab(this,'notif')">Notifikasi <span style="background:var(--green);color:white;font-size:10px;padding:1px 6px;border-radius:50px;margin-left:4px;">4</span></button>
+          <button class="tab" onclick="switchTab(this,'myitems')">Barang Saya</button>
+        </div>
+
+        <div id="tab-activity">
+          <ul class="activity-list">
+            <!-- sffesf -->
+             
+          </ul>
+        </div>
+
+        <div id="tab-notif" style="display:none;">
+          <ul class="notif-list">
+            <!-- efiusbf -->
+          </ul>
+        </div>
+
+        <div id="tab-myitems" style="display:none;">
+          <!-- oiaefewof -->
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <div class="dash-panel">
+        <div class="panel-header">
+          <div class="panel-title">Dampak Lingkungan (SDG 12)</div>
+          <button class="panel-action">Detail →</button>
+        </div>
+        <div class="sdg-bar">
+          <div class="sdg-bar-label"><span>Barang Beredar</span><span style="font-weight:500;color:var(--green-dark)">78%</span></div>
+          <div class="sdg-bar-track"><div class="sdg-bar-fill fill-green" style="width:78%"></div></div>
+        </div>
+        <div class="sdg-bar">
+          <div class="sdg-bar-label"><span>Transaksi Sukses</span><span style="font-weight:500;color:#854F0B">63%</span></div>
+          <div class="sdg-bar-track"><div class="sdg-bar-fill fill-amber" style="width:63%"></div></div>
+        </div>
+        <div class="sdg-bar">
+          <div class="sdg-bar-label"><span>User Aktif</span><span style="font-weight:500;color:#185FA5">91%</span></div>
+          <div class="sdg-bar-track"><div class="sdg-bar-fill fill-blue" style="width:91%"></div></div>
+        </div>
+        <div style="margin-top:1rem;padding:12px;background:var(--green-light);border-radius:var(--radius-sm);font-size:13px;color:var(--green-dark);">
+          🌿 Bulan ini komunitas mencegah <strong>340kg</strong> potensi limbah rumah tangga.
+        </div>
+      </div>
+
+      <div class="dash-panel">
+        <div class="panel-header">
+          <div class="panel-title">Aksi Cepat</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button class="btn btn-outline" style="width:100%;font-size:13px;padding:10px 8px;border-radius:var(--radius-sm);" onclick="openModal('add-item-modal')">📦 Tambah Barang</button>
+          <button class="btn btn-outline" style="width:100%;font-size:13px;padding:10px 8px;border-radius:var(--radius-sm);" onclick="window.location.href='katalog.html'">🔍 Cari Barang</button>
+          <button class="btn btn-outline" style="width:100%;font-size:13px;padding:10px 8px;border-radius:var(--radius-sm);">🔄 Riwayat Saya</button>
+          <button class="btn btn-outline" style="width:100%;font-size:13px;padding:10px 8px;border-radius:var(--radius-sm);">⚙️ Pengaturan</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>PakaiLagiAja &mdash; Mendukung SDG 12: Konsumsi dan Produksi Bertanggung Jawab &bull; <a href="#">Tentang</a> &bull; <a href="#">Kontak</a></p>
+</footer>
+
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('login-modal')">✕</button>
+    <div class="modal-title">Selamat datang kembali</div>
+    <div class="modal-sub">Masuk ke akun PakaiLagiAja kamu</div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="nama@email.com"></div>
+    <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="••••••••"></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="handleLogin()">Masuk</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="register-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('register-modal')">✕</button>
+    <div class="modal-title">Buat akun baru</div>
+    <div class="modal-sub">Bergabung dengan komunitas PakaiLagiAja</div>
+    <div class="form-group"><label class="form-label">Nama Lengkap</label><input class="form-input" type="text" placeholder="Nama kamu"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="nama@email.com"></div>
+    <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="Min. 8 karakter"></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="handleRegister()">Daftar</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="add-item-modal">
+  <div class="modal" style="max-width:500px;">
+    <button class="modal-close" onclick="closeModal('add-item-modal')">✕</button>
+    <div class="modal-title">Tambah Barang</div>
+    <div class="modal-sub">Bagikan barang yang sudah tidak terpakai</div>
+    
+    <div class="form-group">
+      <label class="form-label">Nama Barang</label>
+      <input class="form-input" type="text" placeholder="Contoh: Kipas Angin Miyako 12 inch">
+    </div>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label class="form-label">Kategori</label>
+        <select class="form-input" style="cursor:pointer;">
+          <option>Elektronik</option>
+          <option>Buku</option>
+          <option>Dapur</option>
+          <option>Pakaian</option>
+          <option>Perabot</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Jenis</label>
+        <select class="form-input" style="cursor:pointer;">
+          <option>Pinjam</option>
+          <option>Tukar</option>
+          <option>Gratis</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Kondisi</label>
+      <select class="form-input" style="cursor:pointer;">
+        <option>Sangat Baik</option>
+        <option>Baik</option>
+        <option>Cukup Baik</option>
+        <option>Perlu Perbaikan</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Deskripsi</label>
+      <textarea class="form-input" rows="3" placeholder="Ceritakan kondisi barang lebih detail..." style="resize:vertical;"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Foto Barang</label>
+  
+        <input type="file" id="add-item-file-input" accept="image/*" style="display: none;">
+  
+        <div id="add-item-upload-area">
+            <div id="add-item-placeholder">
+                📷 Klik untuk upload foto
+            </div>
+            <img id="add-item-preview" src="" alt="Preview Foto">
+        </div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;" onclick="handleTambahBarang()">Tambah ke Katalog</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+<script src="script.js"></script>
+<script>
+  proteksiHalaman();
+</script>
+
+</body>
+</html>
