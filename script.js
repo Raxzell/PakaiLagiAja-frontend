@@ -32,6 +32,11 @@ function switchTab(btn, tabId) {
 
 let catalogItems = [];
 
+function getFotoSrc(foto) {
+  if (!foto) return null;
+  return foto.startsWith('http') ? foto : `${API_BASE_URL}/uploads/${foto}`;
+}
+
 // Ambil data barang dari database
 async function fetchBarang() {
   try {
@@ -121,7 +126,7 @@ function renderCatalog() {
     <div class="catalog-item" onclick="openItemDetail(${catalogItems.indexOf(item)})" style="animation-delay:${i*0.04}s">
       <div class="catalog-item-img" style="background:${item.bg}">
         ${item.foto 
-          ? `<img src="${API_BASE_URL}/uploads/${item.foto}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-sm);">` 
+          ? `<img src="${getFotoSrc(item.foto)}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-sm);">` 
           : item.icon
         }
       </div>
@@ -164,7 +169,7 @@ async function openItemDetail(idx) {
   if (imgEl && nameEl && descEl) {
     if (item.foto) {
       imgEl.style.background = item.bg;
-      imgEl.innerHTML = `<img src="${API_BASE_URL}/uploads/${item.foto}" style="width:100%;height:100%;object-fit:cover;">`;
+      imgEl.innerHTML = `<img src="${getFotoSrc(item.foto)}" style="width:100%;height:100%;object-fit:cover;">`;
     } else {
       imgEl.style.background = item.bg;
       imgEl.textContent = item.icon;
