@@ -367,45 +367,97 @@ function applyCrop() {
   }, 'image/jpeg');
 }
 
+function isValidGmail(email) {
+  return /^[^\s@]+@gmail\.com$/.test(email);
+}
+
+function isValidPassword(password) {
+  return password.length >= 8;
+}
+
 // ── AUTH FUNCTIONS ──
 async function handleRegister() {
-  const nama = document.querySelector('#register-modal .form-input[type="text"]').value;
-  const email = document.querySelector('#register-modal .form-input[type="email"]').value;
+  const nama = document.querySelector('#register-modal .form-input[type="text"]').value.trim();
+  const email = document.querySelector('#register-modal .form-input[type="email"]').value.trim();
   const password = document.querySelector('#register-modal .form-input[type="password"]').value;
-  const role = 'penerima'; 
+  const role = 'penerima';
 
-  if (!nama || !email || !password) { alert('Semua field harus diisi!'); return; }
+  if (!nama || !email || !password) {
+    alert('Semua field harus diisi!');
+    return;
+  }
+
+  if (!isValidGmail(email)) {
+    alert('Email harus menggunakan format Gmail, contoh: nama@gmail.com');
+    return;
+  }
+
+  if (!isValidPassword(password)) {
+    alert('Password minimal harus 8 karakter!');
+    return;
+  }
 
   try {
     const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nama, email, password, role })
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nama, email, password, role })
     });
+
     const data = await response.json();
-    if (response.ok) { alert('Register berhasil! Silakan login.'); closeModal('register-modal'); } 
-    else { alert(data.message); }
-  } catch (err) { alert('Gagal konek ke server!'); }
+
+    if (response.ok) {
+      alert('Register berhasil! Silakan login.');
+      closeModal('register-modal');
+    } else {
+      alert(data.message);
+    }
+  } catch (err) {
+    alert('Gagal konek ke server!');
+  }
 }
 
 async function handleLogin() {
-  const email = document.querySelector('#login-modal .form-input[type="email"]').value;
+  const email = document.querySelector('#login-modal .form-input[type="email"]').value.trim();
   const password = document.querySelector('#login-modal .form-input[type="password"]').value;
 
-  if (!email || !password) { alert('Email dan password harus diisi!'); return; }
+  if (!email || !password) {
+    alert('Email dan password harus diisi!');
+    return;
+  }
+
+  if (!isValidGmail(email)) {
+    alert('Email harus menggunakan format Gmail, contoh: nama@gmail.com');
+    return;
+  }
+
+  if (!isValidPassword(password)) {
+    alert('Password minimal harus 8 karakter!');
+    return;
+  }
 
   try {
     const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password })
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
     });
+
     const data = await response.json();
+
     if (response.ok) {
       localStorage.setItem('user', JSON.stringify(data.user));
       alert(`Selamat datang, ${data.user.nama}!`);
-      closeModal('login-modal'); window.location.href = 'dashboard.html';
-    } else { alert(data.message); }
-  } catch (err) { alert('Gagal konek ke server!'); }
+      closeModal('login-modal');
+      window.location.href = 'dashboard.html';
+    } else {
+      alert(data.message);
+    }
+  } catch (err) {
+    alert('Gagal konek ke server!');
+  }
 }
 
-// ── TAMBAH BARANG ──
 // ── TAMBAH BARANG ──
 let isAddingBarang = false;
 
