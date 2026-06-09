@@ -91,6 +91,11 @@ function renderCatalog() {
     document.getElementById('count-dapur').textContent = catalogItems.filter(item => item.cat === 'dapur').length;
     document.getElementById('count-pakaian').textContent = catalogItems.filter(item => item.cat === 'pakaian').length;
     document.getElementById('count-perabot').textContent = catalogItems.filter(item => item.cat === 'perabot').length;
+
+    const catalogTotalCount = document.getElementById('catalog-total-count');
+    if (catalogTotalCount) {
+      catalogTotalCount.textContent = catalogItems.length;
+    }
   }
 
   const searchInput = document.getElementById('search-input');
