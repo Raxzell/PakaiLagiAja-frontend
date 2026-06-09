@@ -401,9 +401,20 @@ async function handleLogin() {
 }
 
 // ── TAMBAH BARANG ──
+// ── TAMBAH BARANG ──
+let isAddingBarang = false;
+
 async function handleTambahBarang() {
+  if (isAddingBarang) return;
+
+  isAddingBarang = true;
+
   const user = JSON.parse(localStorage.getItem('user'));
-  if (!user) { alert('Kamu harus login dulu!'); return; }
+  if (!user) {
+    alert('Kamu harus login dulu!');
+    isAddingBarang = false;
+    return;
+  }
 
   const nama = document.querySelector('#add-item-modal input[type="text"]').value;
   const kategori = document.querySelectorAll('#add-item-modal select')[0].value.toLowerCase();
@@ -411,9 +422,17 @@ async function handleTambahBarang() {
   const kondisi = document.querySelectorAll('#add-item-modal select')[2].value;
   const deskripsi = document.querySelector('#add-item-modal textarea').value;
 
-  if (!nama || !deskripsi) { alert('Nama dan deskripsi harus diisi!'); return; }
+  if (!nama || !deskripsi) {
+    alert('Nama dan deskripsi harus diisi!');
+    isAddingBarang = false;
+    return;
+  }
+
   if (jenis === 'Gratis') {
-    if (!confirm('Kamu yakin mau mendonasikan barang ini secara gratis?')) return;
+    if (!confirm('Kamu yakin mau mendonasikan barang ini secara gratis?')) {
+      isAddingBarang = false;
+      return;
+    }
   }
 
   const formData = new FormData();
@@ -423,19 +442,53 @@ async function handleTambahBarang() {
   formData.append('kondisi', kondisi);
   formData.append('deskripsi', deskripsi);
   formData.append('user_id', user.id);
-  if (croppedBlob) formData.append('foto', croppedBlob, 'foto.jpg'); 
+
+  if (croppedBlob) {
+    formData.append('foto', croppedBlob, 'foto.jpg');
+  }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/barang`, { method: 'POST', body: formData });
+    const response = await fetch(`${API_BASE_URL}/api/barang`, {
+      method: 'POST',
+      body: formData
+    });
+
     const data = await response.json();
+
     if (response.ok) {
       alert('Barang berhasil ditambahkan!');
       closeModal('add-item-modal');
-      croppedBlob = null; 
+
+      croppedBlob = null;
+
+      const previewImage = document.getElementById('add-item-preview');
+      const placeholderText = document.getElementById('add-item-placeholder');
+      const uploadArea = document.getElementById('add-item-upload-area');
+
+      if (previewImage) {
+        previewImage.src = '';
+        previewImage.style.display = 'none';
+      }
+
+      if (placeholderText) {
+        placeholderText.style.display = 'block';
+      }
+
+      if (uploadArea) {
+        uploadArea.style.padding = '';
+      }
+
       if (document.getElementById('catalog-grid')) fetchBarang();
       if (document.querySelector('.stat-card')) loadDashboard();
-    } else { alert(data.message); }
-  } catch (err) { alert('Gagal konek ke server!'); }
+    } else {
+      alert(data.message || 'Gagal tambah barang');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Gagal konek ke server!');
+  } finally {
+    isAddingBarang = false;
+  }
 }
 
 function updateNavbar() {
