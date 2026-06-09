@@ -803,7 +803,7 @@ async function loadHomeStats() {
 
     const resUser = await fetch(`${API_BASE_URL}/api/auth/total-users`);
     const dataUser = await resUser.json();
-    if (homePengguna) homePengguna.textContent = dataUser.total; 
+    if (homePengguna) homePengguna.textContent = dataUser.total ?? 0;
   } catch (err) { console.error('Gagal memuat statistik beranda:', err); }
 }
 
