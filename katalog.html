@@ -104,9 +104,17 @@
     <button class="modal-close" onclick="closeModal('register-modal')">✕</button>
     <div class="modal-title">Buat akun baru</div>
     <div class="modal-sub">Bergabung dengan komunitas PakaiLagiAja</div>
-    <div class="form-group"><label class="form-label">Nama Lengkap</label><input class="form-input" type="text" placeholder="Nama kamu"></div>
-    <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="nama@email.com"></div>
-    <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="Min. 8 karakter"></div>
+    <div class="form-group"><label class="form-label">Nama Lengkap</label><input class="form-input" id="reg-nama" type="text" placeholder="Nama kamu"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="reg-email" type="email" placeholder="nama@gmail.com"></div>
+    <div class="form-group">
+      <label class="form-label">Nomor Telepon (WhatsApp)</label>
+      <div style="display:flex;align-items:center;gap:0;">
+        <span style="background:var(--cream-dark);border:1px solid var(--border);border-right:none;border-radius:var(--radius-sm) 0 0 var(--radius-sm);padding:9px 10px;font-size:14px;color:var(--text-muted);white-space:nowrap;">+62</span>
+        <input class="form-input" id="reg-telepon" type="tel" placeholder="81234567890" style="border-radius:0 var(--radius-sm) var(--radius-sm) 0;">
+      </div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:4px;">Digunakan untuk koordinasi peminjaman via WhatsApp</div>
+    </div>
+    <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="reg-password" type="password" placeholder="Min. 8 karakter"></div>
     <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="handleRegister()">Daftar</button>
   </div>
 </div>
@@ -201,7 +209,7 @@
         <div style="width:28px;height:28px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:13px;" id="detail-owner-avatar">?</div>
         <span style="font-size:13px;color:var(--text-muted);">Pemilik: <strong style="color:var(--text);" id="detail-owner">-</strong> &bull; Rating: ⭐ <span id="detail-rating">-</span></span>
       </div>
-      <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" onclick="handleAjukanPinjam()">Ajukan Peminjaman</button>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:8px;" id="btn-aksi-pinjam" onclick="handleAjukanPinjam()">Ajukan Peminjaman</button>
 
       <div class="lifecycle-timeline">
         <div class="timeline-title">Riwayat Lifecycle</div>
@@ -210,6 +218,35 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Modal Ajukan Pinjaman (Note + Kalender) -->
+<div class="modal-overlay" id="pinjam-modal">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close" onclick="closeModal('pinjam-modal')">✕</button>
+    <div class="modal-title">Ajukan Peminjaman</div>
+    <div class="modal-sub">Lengkapi detail permintaan pinjaman kamu</div>
+
+    <div class="form-group">
+      <label class="form-label">Catatan untuk Pemilik</label>
+      <textarea class="form-input" id="pinjam-catatan" rows="3" placeholder="Contoh: Saya ingin meminjam barang ini untuk acara keluarga hari Sabtu..." style="resize:vertical;"></textarea>
+      <div style="font-size:11px;color:var(--text-light);margin-top:4px;">Ceritakan tujuan penggunaan agar pemilik bisa mempertimbangkan</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-group">
+        <label class="form-label">📅 Tanggal Pengambilan</label>
+        <input class="form-input" id="pinjam-tgl-ambil" type="date" style="cursor:pointer;">
+      </div>
+      <div class="form-group">
+        <label class="form-label">📅 Tanggal Pengembalian</label>
+        <input class="form-input" id="pinjam-tgl-kembali" type="date" style="cursor:pointer;">
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--text-light);margin-bottom:14px;">Estimasi jadwal penggunaan sebagai acuan pemilik barang</div>
+
+    <button class="btn btn-primary" style="width:100%;" onclick="submitAjukanPinjam()">Kirim Permintaan</button>
   </div>
 </div>
 
