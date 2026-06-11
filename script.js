@@ -92,6 +92,11 @@ function renderCatalog() {
     document.getElementById('count-pakaian').textContent = catalogItems.filter(item => item.cat === 'pakaian').length;
     document.getElementById('count-perabot').textContent = catalogItems.filter(item => item.cat === 'perabot').length;
 
+    const countLainnya = document.getElementById('count-lainnya');
+    if (countLainnya) {
+      countLainnya.textContent = catalogItems.filter(item => item.cat === 'lainnya').length;
+    }
+    
     const catalogTotalCount = document.getElementById('catalog-total-count');
     if (catalogTotalCount) {
       catalogTotalCount.textContent = catalogItems.length;
@@ -144,6 +149,7 @@ function renderCatalog() {
             ${item.status}
           </span>
           <span class="tag ${item.type === 'Gratis' ? 'tag-green' : 'tag-gray'}" style="font-size:10px;">${item.type}</span>
+        </div>
       </div>
     </div>
   `).join('');
@@ -638,6 +644,22 @@ async function submitAjukanPinjam() {
   } catch (err) { alert('Gagal konek ke server!'); }
 }
 
+function formatNomorWA(nomor) {
+  if (!nomor) return null;
+
+  let cleaned = String(nomor).replace(/\D/g, '');
+
+  if (cleaned.startsWith('0')) {
+    cleaned = '62' + cleaned.substring(1);
+  } else if (cleaned.startsWith('8')) {
+    cleaned = '62' + cleaned;
+  } else if (!cleaned.startsWith('62')) {
+    cleaned = '62' + cleaned;
+  }
+
+  return cleaned;
+}
+
 // ── DASHBOARD REAL DATA ──
 async function loadDashboard() {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -686,44 +708,139 @@ async function loadDashboard() {
     }
 
     const activityList = document.querySelector('#tab-activity .activity-list');
-    if (activityList) {
-      if (dataTransaksi.length === 0) {
-        activityList.innerHTML = `<li style="text-align:center;padding:2rem;color:var(--text-muted);list-style:none;">Belum ada aktivitas 📋</li>`;
-      } else {
-        activityList.innerHTML = dataTransaksi.map(t => {
-          const isApproved = t.status === 'Disetujui';
-          const nomorPemilik = t.nomor_pemilik ? String(t.nomor_pemilik).replace(/^0+/, '62') : null;
-          const waLink = nomorPemilik ? `https://wa.me/${nomorPemilik}` : null;
-          return `
+if (activityList) {
+  const resNotifForActivity = await fetch(`${API_BASE_URL}/api/transaksi/notifikasi/${user.id}`);
+  const dataNotifForActivity = await resNotifForActivity.json();
+
+  const aktivitasSebagaiPeminjam = dataTransaksi.map(t => ({
+    tipe: 'peminjam',
+    id: t.id,
+    barang_id: t.barang_id,
+    nama_barang: t.nama_barang,
+    status: t.status,
+    created_at: t.created_at,
+    nomor_pemilik: t.nomor_pemilik
+  }));
+
+  const aktivitasSebagaiPemilik = dataNotifForActivity
+    .filter(n => n.status !== 'Menunggu')
+    .map(n => ({
+      tipe: 'pemilik',
+      id: n.id,
+      barang_id: n.barang_id,
+      nama_barang: n.nama_barang,
+      nama_peminjam: n.nama_peminjam,
+      status: n.status,
+      created_at: n.created_at,
+      nomor_peminjam: n.nomor_peminjam
+    }));
+
+  const semuaAktivitas = [
+    ...aktivitasSebagaiPeminjam,
+    ...aktivitasSebagaiPemilik
+  ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+  if (semuaAktivitas.length === 0) {
+    activityList.innerHTML = `<li style="text-align:center;padding:2rem;color:var(--text-muted);list-style:none;">Belum ada aktivitas 📋</li>`;
+  } else {
+    activityList.innerHTML = semuaAktivitas.map(a => {
+      const isApproved = a.status === 'Disetujui';
+      const isRejected = a.status === 'Ditolak';
+      const isReturned = a.status === 'Dikembalikan';
+
+      if (a.tipe === 'pemilik') {
+        const nomorPeminjam = formatNomorWA(a.nomor_peminjam);
+        const waLinkPeminjam = nomorPeminjam ? `https://wa.me/${nomorPeminjam}` : null;
+
+        return `
           <li class="activity-item">
-            <div class="activity-avatar" style="background:var(--green-light);color:var(--green-dark);">${t.nama_barang ? t.nama_barang.charAt(0) : '?'}</div>
+            <div class="activity-avatar" style="background:var(--green-light);color:var(--green-dark);">
+              ${a.nama_barang ? a.nama_barang.charAt(0) : '?'}
+            </div>
+
             <div class="activity-text">
-              <strong>${t.nama_barang}</strong> — <span class="tag ${t.status === 'Dikembalikan' ? 'tag-green' : isApproved ? 'tag-amber' : 'tag-blue'}">${isApproved ? 'Dipinjam' : t.status}</span>
-              ${isApproved && waLink ? `
+              ${
+                isApproved
+                  ? `✅ Kamu menyetujui pinjaman <strong>${a.nama_barang}</strong> ke <strong>${a.nama_peminjam}</strong>`
+                  : `❌ Kamu menolak pinjaman <strong>${a.nama_barang}</strong> dari <strong>${a.nama_peminjam}</strong>`
+              }
+
+              ${isApproved ? `
+                <div class="notif-jadwal" style="margin-top:8px;">
+                  Pinjaman sudah disetujui. Silakan chat peminjam untuk koordinasi.
+                </div>
+              ` : ''}
+
+              ${isApproved && waLinkPeminjam ? `
                 <div style="margin-top:8px;">
-                  <a href="${waLink}" target="_blank" class="btn-wa-chat">
-                    <span>💬</span> Chat Pemilik
+                  <a href="${waLinkPeminjam}" target="_blank" class="btn-wa-chat">
+                    <span>💬</span> Chat Peminjam
                   </a>
-                </div>` : ''}
+                </div>
+              ` : ''}
             </div>
+
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-              <div class="activity-time">${new Date(t.created_at).toLocaleDateString('id-ID')}</div>
-              ${t.status === 'Disetujui' ? `<button class="btn btn-outline" style="font-size:11px;padding:4px 8px;" onclick="handleKembalikan(${t.id}, ${t.barang_id})">Kembalikan</button>` : ''}
+              <div class="activity-time">${new Date(a.created_at).toLocaleDateString('id-ID')}</div>
             </div>
-          </li>`;
-        }).join('');
+          </li>
+        `;
       }
-    }
+
+      const nomorPemilik = formatNomorWA(a.nomor_pemilik);
+      const waLinkPemilik = nomorPemilik ? `https://wa.me/${nomorPemilik}` : null;
+
+      return `
+        <li class="activity-item">
+          <div class="activity-avatar" style="background:var(--green-light);color:var(--green-dark);">
+            ${a.nama_barang ? a.nama_barang.charAt(0) : '?'}
+          </div>
+
+          <div class="activity-text">
+            <strong>${a.nama_barang}</strong> — 
+            <span class="tag ${isReturned ? 'tag-green' : isApproved ? 'tag-amber' : isRejected ? 'tag-coral' : 'tag-blue'}">
+              ${isApproved ? 'Dipinjam' : a.status}
+            </span>
+
+            ${isApproved ? `
+              <div class="notif-jadwal" style="margin-top:8px;">
+                Pinjaman disetujui. Silakan chat pemilik untuk koordinasi pengambilan barang.
+              </div>
+            ` : ''}
+
+            ${isApproved && waLinkPemilik ? `
+              <div style="margin-top:8px;">
+                <a href="${waLinkPemilik}" target="_blank" class="btn-wa-chat">
+                  <span>💬</span> Chat Pemilik
+                </a>
+              </div>
+            ` : ''}
+          </div>
+
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+            <div class="activity-time">${new Date(a.created_at).toLocaleDateString('id-ID')}</div>
+            ${isApproved ? `
+              <button class="btn btn-outline" style="font-size:11px;padding:4px 8px;" onclick="handleKembalikan(${a.id}, ${a.barang_id})">
+                Kembalikan
+              </button>
+            ` : ''}
+          </div>
+        </li>
+      `;
+    }).join('');
+  }
+}
 
     const notifList = document.querySelector('#tab-notif .notif-list');
     if (notifList) {
       const resNotif = await fetch(`${API_BASE_URL}/api/transaksi/notifikasi/${user.id}`);
       const dataNotif = await resNotif.json();
+      const pendingNotif = dataNotif.filter(n => n.status === 'Menunggu');
 
-      if (dataNotif.length === 0) {
+      if (pendingNotif.length === 0) {
         notifList.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-muted);">Belum ada notifikasi 🔔</div>`;
       } else {
-        notifList.innerHTML = dataNotif.map(n => {
+        notifList.innerHTML = pendingNotif.map(n => {
           const nomorPeminjam = n.nomor_peminjam ? String(n.nomor_peminjam).replace(/^0+/, '62') : null;
           const waLink = nomorPeminjam ? `https://wa.me/${nomorPeminjam}` : null;
           const formatTgl = (d) => d ? new Date(d).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'}) : null;
