@@ -40,17 +40,17 @@
     <div class="stat-card green fade-in stagger-1">
       <div class="stat-label">Barang Aktif</div>
       <div class="stat-num" style="color:var(--green-dark)">8</div>
-      <!-- <div class="stat-change">↑ 2 minggu ini</div> -->
+      <div class="stat-change">↑ 2 minggu ini</div>
     </div>
     <div class="stat-card amber fade-in stagger-2">
       <div class="stat-label">Sedang Dipinjam</div>
       <div class="stat-num" style="color:#854F0B">3</div>
-      <!-- <div class="stat-change" style="color:var(--amber)">Batas: 2 hari lagi</div> -->
+      <div class="stat-change" style="color:var(--amber)">Batas: 2 hari lagi</div>
     </div>
     <div class="stat-card blue fade-in stagger-3">
       <div class="stat-label">Total Transaksi</div>
       <div class="stat-num" style="color:var(--blue)">27</div>
-      <!-- <div class="stat-change" style="color:var(--blue)">↑ 5 bulan ini</div> -->
+      <div class="stat-change" style="color:var(--blue)">↑ 5 bulan ini</div>
     </div>
   </div>
 
@@ -95,9 +95,17 @@
     <button class="modal-close" onclick="closeModal('register-modal')">✕</button>
     <div class="modal-title">Buat akun baru</div>
     <div class="modal-sub">Bergabung dengan komunitas PakaiLagiAja</div>
-    <div class="form-group"><label class="form-label">Nama Lengkap</label><input class="form-input" type="text" placeholder="Nama kamu"></div>
-    <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="nama@email.com"></div>
-    <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" placeholder="Min. 8 karakter"></div>
+    <div class="form-group"><label class="form-label">Nama Lengkap</label><input class="form-input" id="reg-nama" type="text" placeholder="Nama kamu"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="reg-email" type="email" placeholder="nama@gmail.com"></div>
+    <div class="form-group">
+      <label class="form-label">Nomor Telepon (WhatsApp)</label>
+      <div style="display:flex;align-items:center;gap:0;">
+        <span style="background:var(--cream-dark);border:1px solid var(--border);border-right:none;border-radius:var(--radius-sm) 0 0 var(--radius-sm);padding:9px 10px;font-size:14px;color:var(--text-muted);white-space:nowrap;">+62</span>
+        <input class="form-input" id="reg-telepon" type="tel" placeholder="81234567890" style="border-radius:0 var(--radius-sm) var(--radius-sm) 0;">
+      </div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:4px;">Digunakan untuk koordinasi peminjaman via WhatsApp</div>
+    </div>
+    <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="reg-password" type="password" placeholder="Min. 8 karakter"></div>
     <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="handleRegister()">Daftar</button>
   </div>
 </div>
