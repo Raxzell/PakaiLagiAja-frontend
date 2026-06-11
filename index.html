@@ -32,7 +32,7 @@
     <h1>Pakai Lagi Aja.</h1>
     <p>
       <strong style="color: var(--green-dark); font-size: 1.15rem; display: block; margin-bottom: 8px;">Reuse Today, Save Tomorrow.</strong>
-      Platform peminjaman, penukaran, dan distribusi barang layak pakai. Bantu sesama, kurangi limbah, perpanjang siklus hidup barang.
+      Platform peminjaman dan distribusi barang layak pakai. Bantu sesama, kurangi limbah, perpanjang siklus hidup barang.
     </p>
 
     <div class="hero-actions">
@@ -90,8 +90,8 @@
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">♻️</div>
-        <h3>Sistem Penukaran &amp; Pinjam</h3>
-        <p>Ajukan peminjaman atau penukaran barang bekas layak pakai langsung ke pemiliknya. Kendalikan penuh status persetujuan barang lewat Dashboard interaktifmu.</p>
+        <h3>Sistem Peminjaman </h3>
+        <p>Ajukan peminjaman barang bekas layak pakai langsung ke pemiliknya. Kendalikan penuh status persetujuan barang lewat Dashboard interaktifmu.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">📊</div>
@@ -110,7 +110,7 @@
     <div style="text-align:center; padding: 1.5rem; position: relative;">
       <div style="width:52px;height:52px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:22px;">1</div>
       <div style="font-weight:500;margin-bottom:6px;">Buat Akun</div>
-      <p style="font-size:13px;color:var(--text-muted);">Registrasi sebagai Donatur atau Penerima dalam hitungan menit.</p>
+      <p style="font-size:13px;color:var(--text-muted);">Registrasi akun dalam hitungan menit.</p>
     </div>
     <div style="text-align:center; padding: 1.5rem;">
       <div style="width:52px;height:52px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:22px;">2</div>
@@ -161,15 +161,23 @@
     <div class="modal-sub">Bergabung dengan komunitas PakaiLagiAja</div>
     <div class="form-group">
       <label class="form-label">Nama Lengkap</label>
-      <input class="form-input" type="text" placeholder="Nama kamu">
+      <input class="form-input" id="reg-nama" type="text" placeholder="Nama kamu">
     </div>
     <div class="form-group">
       <label class="form-label">Email</label>
-      <input class="form-input" type="email" placeholder="nama@email.com">
+      <input class="form-input" id="reg-email" type="email" placeholder="nama@gmail.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nomor Telepon (WhatsApp)</label>
+      <div style="display:flex;align-items:center;gap:0;">
+        <span style="background:var(--cream-dark);border:1px solid var(--border);border-right:none;border-radius:var(--radius-sm) 0 0 var(--radius-sm);padding:9px 10px;font-size:14px;color:var(--text-muted);white-space:nowrap;">+62</span>
+        <input class="form-input" id="reg-telepon" type="tel" placeholder="81234567890" style="border-radius:0 var(--radius-sm) var(--radius-sm) 0;">
+      </div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:4px;">Digunakan untuk koordinasi peminjaman via WhatsApp</div>
     </div>
     <div class="form-group">
       <label class="form-label">Password</label>
-      <input class="form-input" type="password" placeholder="Min. 8 karakter">
+      <input class="form-input" id="reg-password" type="password" placeholder="Min. 8 karakter">
     </div>
     <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="handleRegister()">Daftar</button>
   </div>
