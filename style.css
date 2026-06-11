@@ -185,7 +185,6 @@ footer a { color: var(--green); text-decoration: none; }
   .stats-row { grid-template-columns: repeat(2, 1fr); }
   .nav-links { display: none; }
 
-  /* Membuat Layout Katalog otomatis menumpuk rapi di layar medium/kecil */
   .catalog-layout {
     grid-template-columns: 1fr !important;
     gap: 1.5rem;
@@ -225,7 +224,6 @@ footer a { color: var(--green); text-decoration: none; }
 .catalog-item, .feature-card, .stat-card { opacity: 0; }
 .catalog-item.visible, .feature-card.visible, .stat-card.visible { opacity: 1; animation: fadeIn 0.4s ease forwards; }
 
-/* style.css - Tambahin di paling bawah */
 
 /* Kotak Area Upload Custom */
 #add-item-upload-area {
@@ -240,9 +238,9 @@ footer a { color: var(--green); text-decoration: none; }
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 120px; /* Biar ukurannya konsisten */
+    min-height: 120px;
     position: relative;
-    overflow: hidden; /* Biar gambar gak luber */
+    overflow: hidden;
 }
 
 /* Efek Hover pas mouse di atas kotak */
@@ -254,12 +252,12 @@ footer a { color: var(--green); text-decoration: none; }
 
 /* Style buat Gambar Preview */
 #add-item-preview {
-    display: none; /* Disembunyiin dulu sebelum ada file */
+    display: none;
     max-width: 100%;
-    max-height: 150px; /* Batin tingginya biar modal gak kepanjangan */
+    max-height: 150px;
     border-radius: var(--radius-sm);
-    object-fit: cover; /* Biar gambar gak gepeng */
-    animation: fadeInModal 0.3s ease; /* Pake animasi biar halus */
+    object-fit: cover;
+    animation: fadeInModal 0.3s ease;
 }
 
 .status-waiting {
@@ -286,7 +284,6 @@ footer a { color: var(--green); text-decoration: none; }
   transform: translateY(-1px);
 }
 
-/* ── NOTIF CATATAN & JADWAL ── */
 .notif-catatan {
   background: var(--cream);
   border-left: 3px solid var(--green);
