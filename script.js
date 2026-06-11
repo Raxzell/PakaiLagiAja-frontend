@@ -377,13 +377,24 @@ function isValidPassword(password) {
 
 // ── AUTH FUNCTIONS ──
 async function handleRegister() {
-  const nama = document.querySelector('#register-modal .form-input[type="text"]').value.trim();
-  const email = document.querySelector('#register-modal .form-input[type="email"]').value.trim();
-  const password = document.querySelector('#register-modal .form-input[type="password"]').value;
-  const role = 'penerima';
+  const namaEl = document.getElementById('reg-nama');
+  const emailEl = document.getElementById('reg-email');
+  const teleponEl = document.getElementById('reg-telepon');
+  const passwordEl = document.getElementById('reg-password');
+
+  const nama = namaEl ? namaEl.value.trim() : document.querySelector('#register-modal .form-input[type="text"]').value.trim();
+  const email = emailEl ? emailEl.value.trim() : document.querySelector('#register-modal .form-input[type="email"]').value.trim();
+  const password = passwordEl ? passwordEl.value : document.querySelector('#register-modal .form-input[type="password"]').value;
+  const teleponRaw = teleponEl ? teleponEl.value.trim() : '';
+  const nomor_telepon = teleponRaw ? '62' + teleponRaw.replace(/^0+/, '') : null;
 
   if (!nama || !email || !password) {
     alert('Semua field harus diisi!');
+    return;
+  }
+
+  if (!teleponRaw) {
+    alert('Nomor telepon WhatsApp harus diisi!');
     return;
   }
 
@@ -401,7 +412,7 @@ async function handleRegister() {
     const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nama, email, password, role })
+      body: JSON.stringify({ nama, email, password, nomor_telepon })
     });
 
     const data = await response.json();
@@ -574,19 +585,55 @@ function cekLoginLaluTambah() {
 // ── AJUKAN PINJAMAN ──
 let selectedBarangId = null;
 
-async function handleAjukanPinjam() {
+// Membuka modal pinjam dengan form note + kalender
+function handleAjukanPinjam() {
   const user = JSON.parse(localStorage.getItem('user'));
   if (!user) { alert('Kamu harus login dulu!'); openModal('login-modal'); return; }
+
+  // Set minimum tanggal ke hari ini
+  const today = new Date().toISOString().split('T')[0];
+  const tglAmbil = document.getElementById('pinjam-tgl-ambil');
+  const tglKembali = document.getElementById('pinjam-tgl-kembali');
+  if (tglAmbil) { tglAmbil.min = today; tglAmbil.value = ''; }
+  if (tglKembali) { tglKembali.min = today; tglKembali.value = ''; }
+  const catatan = document.getElementById('pinjam-catatan');
+  if (catatan) catatan.value = '';
+
+  closeModal('item-detail-modal');
+  openModal('pinjam-modal');
+}
+
+// Submit permintaan pinjam dengan catatan dan jadwal
+async function submitAjukanPinjam() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) { alert('Kamu harus login dulu!'); openModal('login-modal'); return; }
+
+  const catatan = document.getElementById('pinjam-catatan')?.value.trim() || '';
+  const tanggal_ambil = document.getElementById('pinjam-tgl-ambil')?.value || '';
+  const tanggal_kembali_rencana = document.getElementById('pinjam-tgl-kembali')?.value || '';
+
+  if (!catatan) {
+    alert('Tolong isi catatan untuk pemilik barang!');
+    return;
+  }
+  if (!tanggal_ambil || !tanggal_kembali_rencana) {
+    alert('Tolong pilih tanggal pengambilan dan pengembalian!');
+    return;
+  }
+  if (tanggal_kembali_rencana <= tanggal_ambil) {
+    alert('Tanggal pengembalian harus setelah tanggal pengambilan!');
+    return;
+  }
 
   try {
     const response = await fetch(`${API_BASE_URL}/api/transaksi`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ barang_id: selectedBarangId, peminjam_id: user.id })
+      body: JSON.stringify({ barang_id: selectedBarangId, peminjam_id: user.id, catatan_peminjam: catatan, tanggal_ambil, tanggal_kembali_rencana })
     });
     const data = await response.json();
     if (response.ok) {
-      alert('Peminjaman berhasil diajukan!');
-      closeModal('item-detail-modal');
+      alert('Permintaan peminjaman berhasil dikirim! Tunggu konfirmasi pemilik barang 🌿');
+      closeModal('pinjam-modal');
       fetchBarang();
     } else { alert(data.message); }
   } catch (err) { alert('Gagal konek ke server!'); }
@@ -644,18 +691,28 @@ async function loadDashboard() {
       if (dataTransaksi.length === 0) {
         activityList.innerHTML = `<li style="text-align:center;padding:2rem;color:var(--text-muted);list-style:none;">Belum ada aktivitas 📋</li>`;
       } else {
-        activityList.innerHTML = dataTransaksi.map(t => `
+        activityList.innerHTML = dataTransaksi.map(t => {
+          const isApproved = t.status === 'Disetujui';
+          const nomorPemilik = t.nomor_pemilik ? String(t.nomor_pemilik).replace(/^0+/, '62') : null;
+          const waLink = nomorPemilik ? `https://wa.me/${nomorPemilik}` : null;
+          return `
           <li class="activity-item">
             <div class="activity-avatar" style="background:var(--green-light);color:var(--green-dark);">${t.nama_barang ? t.nama_barang.charAt(0) : '?'}</div>
             <div class="activity-text">
-              <strong>${t.nama_barang}</strong> — <span class="tag ${t.status === 'Dikembalikan' ? 'tag-green' : 'tag-blue'}">${t.status === 'Disetujui' ? 'Dipinjam' : t.status}</span>
+              <strong>${t.nama_barang}</strong> — <span class="tag ${t.status === 'Dikembalikan' ? 'tag-green' : isApproved ? 'tag-amber' : 'tag-blue'}">${isApproved ? 'Dipinjam' : t.status}</span>
+              ${isApproved && waLink ? `
+                <div style="margin-top:8px;">
+                  <a href="${waLink}" target="_blank" class="btn-wa-chat">
+                    <span>💬</span> Chat Pemilik
+                  </a>
+                </div>` : ''}
             </div>
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
               <div class="activity-time">${new Date(t.created_at).toLocaleDateString('id-ID')}</div>
               ${t.status === 'Disetujui' ? `<button class="btn btn-outline" style="font-size:11px;padding:4px 8px;" onclick="handleKembalikan(${t.id}, ${t.barang_id})">Kembalikan</button>` : ''}
             </div>
-          </li>
-        `).join('');
+          </li>`;
+        }).join('');
       }
     }
 
@@ -667,25 +724,53 @@ async function loadDashboard() {
       if (dataNotif.length === 0) {
         notifList.innerHTML = `<div style="text-align:center;padding:2rem;color:var(--text-muted);">Belum ada notifikasi 🔔</div>`;
       } else {
-        notifList.innerHTML = dataNotif.map(n => `
+        notifList.innerHTML = dataNotif.map(n => {
+          const nomorPeminjam = n.nomor_peminjam ? String(n.nomor_peminjam).replace(/^0+/, '62') : null;
+          const waLink = nomorPeminjam ? `https://wa.me/${nomorPeminjam}` : null;
+          const formatTgl = (d) => d ? new Date(d).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'}) : null;
+          const tglAmbil = formatTgl(n.tanggal_ambil);
+          const tglKembali = formatTgl(n.tanggal_kembali_rencana);
+          return `
           <li class="notif-item" onclick="this.querySelector('.notif-dot').style.backgroundColor='transparent'">
             <div class="notif-dot" style="${n.status !== 'Menunggu' ? 'background:transparent;' : ''}"></div>
             <div style="flex:1;">
               <div class="notif-text">
-                ${n.status === 'Menunggu' ? `🔔 <strong>${n.nama_peminjam}</strong> mengajukan pinjam <em>${n.nama_barang}</em>` 
-                : n.status === 'Disetujui' ? `✅ Kamu menyetujui pinjaman <em>${n.nama_barang}</em> ke <strong>${n.nama_peminjam}</strong>` 
-                : `❌ Kamu menolak pinjaman <em>${n.nama_barang}</em> dari <strong>${n.nama_peminjam}</strong>`}
+                ${n.status === 'Menunggu'
+                  ? `🔔 <strong>${n.nama_peminjam}</strong> mengajukan pinjam <em>${n.nama_barang}</em>`
+                  : n.status === 'Disetujui'
+                  ? `✅ Kamu menyetujui pinjaman <em>${n.nama_barang}</em> ke <strong>${n.nama_peminjam}</strong>`
+                  : `❌ Kamu menolak pinjaman <em>${n.nama_barang}</em> dari <strong>${n.nama_peminjam}</strong>`}
               </div>
+
+              ${n.status === 'Menunggu' && n.catatan_peminjam ? `
+                <div class="notif-catatan">
+                  <span style="font-size:11px;font-weight:500;color:var(--text-muted);display:block;margin-bottom:3px;">💬 Catatan peminjam:</span>
+                  <em style="font-size:13px;color:var(--text);">"${n.catatan_peminjam}"</em>
+                </div>` : ''}
+
+              ${n.status === 'Menunggu' && (tglAmbil || tglKembali) ? `
+                <div class="notif-jadwal">
+                  <span>📅</span>
+                  <span>${tglAmbil ? `Ambil: <strong>${tglAmbil}</strong>` : ''}${tglAmbil && tglKembali ? ' &nbsp;→&nbsp; ' : ''}${tglKembali ? `Kembali: <strong>${tglKembali}</strong>` : ''}</span>
+                </div>` : ''}
+
               <div class="notif-time">${new Date(n.created_at).toLocaleDateString('id-ID')}</div>
+
               ${n.status === 'Menunggu' ? `
                 <div style="display:flex;gap:8px;margin-top:8px;">
                   <button class="btn btn-primary" style="font-size:12px;padding:6px 12px;" onclick="handleSetujui(${n.id}, ${n.barang_id}); event.stopPropagation();">Setujui</button>
                   <button class="btn btn-outline" style="font-size:12px;padding:6px 12px;" onclick="handleTolak(${n.id}, ${n.barang_id}); event.stopPropagation();">Tolak</button>
-                </div>
-              ` : ''}
+                </div>` : ''}
+
+              ${n.status === 'Disetujui' && waLink ? `
+                <div style="margin-top:8px;">
+                  <a href="${waLink}" target="_blank" class="btn-wa-chat">
+                    <span>💬</span> Chat Peminjam
+                  </a>
+                </div>` : ''}
             </div>
-          </li>
-        `).join('');
+          </li>`;
+        }).join('');
       }
     }
   } catch (err) { console.error('Gagal load dashboard:', err); }
