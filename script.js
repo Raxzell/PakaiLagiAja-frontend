@@ -143,8 +143,7 @@ function renderCatalog() {
             <span class="status-dot ${item.status === 'Tersedia' ? 'status-available' : item.status === 'Menunggu' ? 'status-waiting' : 'status-borrowed'}"></span>
             ${item.status}
           </span>
-          <span class="tag ${item.type === 'Gratis' ? 'tag-green' : item.type === 'Tukar' ? 'tag-blue' : 'tag-gray'}" style="font-size:10px;">${item.type}</span>
-        </div>
+          <span class="tag ${item.type === 'Gratis' ? 'tag-green' : 'tag-gray'}" style="font-size:10px;">${item.type}</span>
       </div>
     </div>
   `).join('');
