@@ -174,7 +174,7 @@ async function openItemDetail(idx) {
   if (imgEl && nameEl && descEl) {
     if (item.foto) {
       imgEl.style.background = item.bg;
-      imgEl.innerHTML = `<img src="${getFotoSrc(item.foto)}" style="width:100%;height:100%;object-fit:cover;">`;
+      imgEl.innerHTML = `<img src="${getFotoSrc(item.foto)}" alt="${item.name}">`;
     } else {
       imgEl.style.background = item.bg;
       imgEl.textContent = item.icon;
