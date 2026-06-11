@@ -184,15 +184,16 @@ footer a { color: var(--green); text-decoration: none; }
   .dash-grid { grid-template-columns: 1fr; }
   .stats-row { grid-template-columns: repeat(2, 1fr); }
   .nav-links { display: none; }
-}
 
-@media (max-width: 560px) {
+  /* Membuat Layout Katalog otomatis menumpuk rapi di layar medium/kecil */
   .catalog-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem;
+    padding: 1rem;
   }
-
   .sidebar {
-    position: static;
+    position: static !important;
+    width: 100% !important;
   }
 }
 
